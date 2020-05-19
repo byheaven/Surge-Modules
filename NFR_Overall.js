@@ -150,7 +150,7 @@ function get_IMDb_message(data) {
         if (imdb_source == "Internet Movie Database") {
             const imdb_votes = data.imdbVotes;
             const imdb_rating = ratings[0]["Value"];
-            rating_message = "IMDb:  ★ " + imdb_rating + "   " + imdb_votes;
+            rating_message = "IMDb:  ★ " + imdb_rating + "   " + [ imdb_votes ];
             if (data.Type == "movie") {
                 if (ratings.length > 1) {
                     const source = ratings[1]["Source"];
