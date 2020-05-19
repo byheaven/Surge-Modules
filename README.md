@@ -3,6 +3,12 @@ These scripts will indicate rating scores from IMDB/Douban/Rotten Tomatoes on Ne
 
 [Notice] Few scores may be missing due to inapplicable data, outdated cookies or invalid api.
 
+## Samples:
+```
+![alt](https://raw.githubusercontent.com/TPCTPCTPC/Yet-Another-Rating-Score-Script/master/Display%20Samples/TV_Series.jpg "TV Series")
+![alt](https://raw.githubusercontent.com/TPCTPCTPC/Yet-Another-Rating-Score-Script/master/Display%20Samples/Movies.jpg "Movies")
+```
+
 ## Load'em in your Surge/Quantumult X/Loon or build a Surge Module yourselves:
 ```properties
 #!name=Rating Scores for Netflix
