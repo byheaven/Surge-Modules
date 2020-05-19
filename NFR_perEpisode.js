@@ -1,7 +1,3 @@
-/**
- * nf_rating_season.js = type=http-response,pattern=^https?://ios\.prod\.ftl\.netflix\.com/iosui/warmer/.+type=show-ath,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/yichahucha/surge/master/nf_rating_season.js
- */
-
 const $tool = new Tool()
 const url = $request.url
 const body = $response.body
@@ -35,7 +31,7 @@ if (title) {
                     let title = value.summary.title
                     if (parseInt(imdbSeasonNumber) == seasonNumber) {
                         const imdbEpisode = imdbEpisodes.find(element => parseInt(element.Episode) == episodeNumber)
-                        title = `${title}${imdbEpisode && imdbEpisode.imdbRating ? `  ⭐️ ${imdbEpisode.imdbRating}` : "  ⭐️ N/A"}`
+                        title = `${title}${imdbEpisode && imdbEpisode.imdbRating ? `  [★ ${imdbEpisode.imdbRating]}` : "  [★ n/a]"}`
                         value.summary.title = title
                         console.log(title);
                     }
