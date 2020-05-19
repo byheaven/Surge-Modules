@@ -1,5 +1,6 @@
 # Yet Another Movies/TV Series Rating Scripts For Netflix iOS APP
 These scripts will indicate rating scores from IMDB/Douban/Rotten Tomatoes on Netflix iOS, contained with two features: Overall Rating & Per Episode Rating.
+
 [Notice] Few scores may be missing due to inapplicable data, outdated cookies or invalid api.
 
 Display netflix ratings（IMDb、douaban）
