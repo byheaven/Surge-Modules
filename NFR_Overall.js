@@ -1,7 +1,3 @@
-/*
-README：https://github.com/yichahucha/surge/tree/master
- */
-
 const $tool = new Tool()
 const consoleLog = false;
 const imdbApikeyCacheKey = "ImdbApikeyCacheKey";
@@ -145,7 +141,7 @@ function updateIMDbApikey() {
 }
 
 function get_IMDb_message(data) {
-    let rating_message = "IMDb:  ⭐️ N/A";
+    let rating_message = "IMDb:  ★ n/a";
     let tomatoes_message = "";
     let country_message = "";
     let ratings = data.Ratings;
@@ -154,13 +150,13 @@ function get_IMDb_message(data) {
         if (imdb_source == "Internet Movie Database") {
             const imdb_votes = data.imdbVotes;
             const imdb_rating = ratings[0]["Value"];
-            rating_message = "IMDb:  ⭐️ " + imdb_rating + "   " + imdb_votes;
+            rating_message = "IMDb:  ★ " + imdb_rating + "   " + imdb_votes;
             if (data.Type == "movie") {
                 if (ratings.length > 1) {
                     const source = ratings[1]["Source"];
                     if (source == "Rotten Tomatoes") {
                         const tomatoes = ratings[1]["Value"];
-                        tomatoes_message = "Tomatoes:  🍅 " + tomatoes;
+                        tomatoes_message = "Tomatoes:  ★ " + tomatoes;
                     }
                 }
             }
@@ -173,7 +169,7 @@ function get_IMDb_message(data) {
 function get_douban_rating_message(data) {
     const average = data.rating.average;
     const numRaters = data.rating.numRaters;
-    const rating_message = `Douban:  ⭐️ ${average.length > 0 ? average + "/10" : "N/A"}   ${numRaters == 0 ? "" : parseFloat(numRaters).toLocaleString()}`;
+    const rating_message = `Douban:  ★ ${average.length > 0 ? average + "/10" : "n/a"}   ${numRaters == 0 ? "" : parseFloat(numRaters).toLocaleString()}`;
     return rating_message;
 }
 
@@ -188,7 +184,7 @@ function get_country_message(data) {
 }
 
 function errorTip() {
-    return { noData: "⭐️ N/A", error: "❌ N/A" }
+    return { noData: "★ n/a", error: "❌ n/a" }
 }
 
 function IMDbApikeys() {
@@ -454,7 +450,7 @@ function countryEmoji(name) {
         "Turkey": "🇹🇷",
         "Trinidad & Tobago": "🇹🇹",
         "Tuvalu": "🇹🇻",
-        "Taiwan": "🇨🇳",
+        "Taiwan": "🇹🇼",
         "Tanzania": "🇹🇿",
         "Ukraine": "🇺🇦",
         "Uganda": "🇺🇬",
