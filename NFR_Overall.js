@@ -169,7 +169,7 @@ function get_IMDb_message(data) {
 function get_douban_rating_message(data) {
     const average = data.rating.average;
     const numRaters = data.rating.numRaters;
-    const rating_message = `Douban:  ★ ${average.length > 0 ? average + "/10" : "n/a"}  [ ${numRaters == 0 ? "" : parseFloat(numRaters).toLocaleString()} ]`;
+    const rating_message = `Douban:  ★ ${average.length > 0 ? average + "/10" : "n/a"}  ${numRaters == 0 ? "" : "[" + parseFloat(numRaters).toLocaleString() + "]"}`;
     return rating_message;
 }
 
