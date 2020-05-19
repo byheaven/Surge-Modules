@@ -1,10 +1,12 @@
 # Yet Another Movies/TV Series Rating Scripts For Netflix iOS APP
-These scripts will indicate rating scores from IMDB/Douban/Rotten Tomatoes on Netflix iOS, contained with two features: Overall Rating & Per Episode Rating.
 
+These scripts will indicate the rating scores from *[IMDB](https://www.imdb.com/)/[Douban](https://movie.douban.com)/[Rotten Tomatoes](https://www.rottentomatoes.com/)* on Netflix iOS, contained with two features: Overall Rating & Per Episode Rating.
 
-[Notice] Few scores may be missing due to inapplicable data, outdated cookies or invalid api.
+This version is a modification of Yichahucha's brilliant work: https://github.com/yichahucha/surge/tree/master, I made some minimal layout and brought back 🇹🇼 flag but the else are the same.
 
-## Load'em in your Surge/Quantumult X/Loon or build a Surge Module yourselves:
+🚨 Some scores may be missing due to inapplicable data, outdated cookies or invalid api.
+
+## Load'em in your *[Surge](https://community.nssurge.com/d/33-scripting)/[Quantumult X](https://github.com/crossutility/Quantumult-X/blob/master/sample.conf)* or build a Surge Module yourselves:
 ```properties
 #!name=Rating Scores for Netflix
 #!desc=Indicates overall rating & per episode rating scores on Netflix
