@@ -6,6 +6,10 @@ This version is a modification of Yichahucha's brilliant work: https://github.co
 
 🚨 Some scores may be missing due to inapplicable data, outdated cookies or invalid api.
 
+## Samples:
+![test image size](https://raw.githubusercontent.com/TPCTPCTPC/Yet-Another-Rating-Score-Script/master/Display%20Samples/TV_Series.jpg "TV Series")
+![test image size](https://raw.githubusercontent.com/TPCTPCTPC/Yet-Another-Rating-Score-Script/master/Display%20Samples/Movies.jpg "Movies")
+
 ## Load'em in your *[Surge](https://community.nssurge.com/d/33-scripting)/[Quantumult X](https://github.com/crossutility/Quantumult-X/blob/master/sample.conf)* or build a Surge Module yourselves:
 ```properties
 #!name=Rating Scores for Netflix
@@ -25,6 +29,5 @@ Netflix = type=http-response,pattern=^https?://ios\.prod\.ftl\.netflix\.com/iosu
 Episodes = type=http-response,pattern=^https?://ios\.prod\.ftl\.netflix\.com/iosui/warmer/.+type=show-ath,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/TPCTPCTPC/Yet-Another-Rating-Score-Script/master/NFR_perEpisode.js
 ```
 
-## Samples:
-![test image size](https://raw.githubusercontent.com/TPCTPCTPC/Yet-Another-Rating-Score-Script/master/Display%20Samples/TV_Series.jpg "TV Series")
-![test image size](https://raw.githubusercontent.com/TPCTPCTPC/Yet-Another-Rating-Score-Script/master/Display%20Samples/Movies.jpg "Movies")
+## Credit
+[Yichahucha](https://github.com/yichahucha/surge/tree/master)
