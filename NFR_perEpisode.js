@@ -31,7 +31,7 @@ if (title) {
                     let title = value.summary.title
                     if (parseInt(imdbSeasonNumber) == seasonNumber) {
                         const imdbEpisode = imdbEpisodes.find(element => parseInt(element.Episode) == episodeNumber)
-                        title = `${title}${imdbEpisode && imdbEpisode.imdbRating ? ` |★ ${imdbEpisode.imdbRating}` : " |★ n/a"}`
+                        title = `${title}${imdbEpisode && imdbEpisode.imdbRating ? ` |★ ${imdbEpisode.imdbRating}` : " "}`
                         value.summary.title = title
                         console.log(title);
                     }
