@@ -40,10 +40,12 @@ if (!$tool.isResponse) {
     if (type == "show") {
         type = "series";
     }
-    if (type == "movie") {
-        year = video.details.releaseYear;
+    if (video.details) {
+        if (type == "movie") {
+            year = video.details.releaseYear;
+        }
+        delete video.details;
     }
-    delete video.details;
     const requestRatings = async () => {
         const IMDb = await requestIMDbRating(title, year, type);
         const Douban = await requestDoubanRating(IMDb.id);
@@ -64,7 +66,7 @@ if (!$tool.isResponse) {
             if (consoleLog) console.log("Netflix Modified Body:\n" + JSON.stringify(obj));
             $done({ body: JSON.stringify(obj) });
         });
-            } else {
+        } else {
             $done({});
         }
 }
