@@ -49,8 +49,7 @@ if (!$tool.isResponse) {
     const requestRatings = async () => {
         const IMDb = await requestIMDbRating(title, year, type);
         const IMDbrating = IMDb.msg.rating;
-        const country = IMDb.msg.country;
-        const message = `${IMDbrating}\n${country}`;
+        const message = `\n${IMDbrating}`;
         return message;
     }
     let msg = "";
