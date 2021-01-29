@@ -48,12 +48,10 @@ if (!$tool.isResponse) {
     }
     const requestRatings = async () => {
         const IMDb = await requestIMDbRating(title, year, type);
-        const Douban = await requestDoubanRating(IMDb.id);
         const IMDbrating = IMDb.msg.rating;
         const tomatoes = IMDb.msg.tomatoes;
         const country = IMDb.msg.country;
-        const doubanRating = Douban.rating;
-        const message = `${country}\n${IMDbrating}\n${doubanRating}${tomatoes.length > 0 ? "\n" + tomatoes + "\n" : "\n"}`;
+        const message = `${country}\n${IMDbrating}\n : "\n"}`;
         return message;
     }
     let msg = "";
@@ -79,28 +77,6 @@ function getTitleMap() {
 function setTitleMap(id, title, map) {
     map[id] = title;
     $tool.write(JSON.stringify(map), netflixTitleCacheKey);
-}
-
-function requestDoubanRating(imdbId) {
-    return new Promise(function (resolve, reject) {
-        const url = "https://api.douban.com/v2/movie/imdb/" + imdbId + "?apikey=0df993c66c0c636e29ecbb5344252a4a";
-        if (consoleLog) console.log("Netflix Douban Rating URL:\n" + url);
-        $tool.get(url, function (error, response, data) {
-            if (!error) {
-                if (consoleLog) console.log("Netflix Douban Rating Data:\n" + data);
-                if (response.status == 200) {
-                    const obj = JSON.parse(data);
-                    const rating = get_douban_rating_message(obj);
-                    resolve({ rating });
-                } else {
-                    resolve({ rating: "Douban:  " + errorTip().noData });
-                }
-            } else {
-                if (consoleLog) console.log("Netflix Douban Rating Error:\n" + error);
-                resolve({ rating: "Douban:  " + errorTip().error });
-            }
-        });
-    });
 }
 
 function requestIMDbRating(title, year, type) {
@@ -160,23 +136,12 @@ function get_IMDb_message(data) {
             if (data.Type == "movie") {
                 if (ratings.length > 1) {
                     const source = ratings[1]["Source"];
-                    if (source == "Rotten Tomatoes") {
-                        const tomatoes = ratings[1]["Value"];
-                        tomatoes_message = "Tomatoes:  ★ " + tomatoes;
-                    }
                 }
             }
         }
     }
     country_message = get_country_message(data.Country);
-    return { rating: rating_message, tomatoes: tomatoes_message, country: country_message }
-}
-
-function get_douban_rating_message(data) {
-    const average = data.rating.average;
-    const numRaters = data.rating.numRaters;
-    const rating_message = `Douban:  ★ ${average.length > 0 ? average + "/10" : "n/a"}  ${numRaters == 0 ? "" : "[" + parseFloat(numRaters).toLocaleString() + "]"}`;
-    return rating_message;
+    return { rating: rating_message, country: country_message }
 }
 
 function get_country_message(data) {
