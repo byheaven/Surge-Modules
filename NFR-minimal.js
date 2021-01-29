@@ -16,7 +16,7 @@ if (!$tool.isResponse) {
         if (currentSummary) {
             url = url.replace("&path=" + encodeURIComponent(currentSummary[0]), "");
         }
-        url = url.replace(/&languages=(.*?)&/, "&languages=en-US&");
+        url = url.replace(/&languages=(.*?)&/, "&languages=en-GB&");
     }
     url += "&path=" + encodeURIComponent(`[${videos[0]},"details"]`);
     $done({ url });
@@ -49,9 +49,8 @@ if (!$tool.isResponse) {
     const requestRatings = async () => {
         const IMDb = await requestIMDbRating(title, year, type);
         const IMDbrating = IMDb.msg.rating;
-        const tomatoes = IMDb.msg.tomatoes;
         const country = IMDb.msg.country;
-        const message = `${country}\n${IMDbrating}\n`;
+        const message = `${country}\n${IMDbrating}`;
         return message;
     }
     let msg = "";
@@ -131,7 +130,7 @@ function get_IMDb_message(data) {
         if (imdb_source == "Internet Movie Database") {
             const imdb_votes = data.imdbVotes;
             const imdb_rating = ratings[0]["Value"];
-            rating_message = imdb_rating;
+            rating_message = "★" + imdb_rating;
             if (data.Type == "movie") {
                 if (ratings.length > 1) {
                     const source = ratings[1]["Source"];
