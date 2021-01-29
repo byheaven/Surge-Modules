@@ -122,7 +122,7 @@ function updateIMDbApikey() {
 }
 
 function get_IMDb_message(data) {
-    let rating_message = "★ n/a";
+    let rating_message = "";
     let country_message = "";
     let ratings = data.Ratings;
     if (ratings.length > 0) {
