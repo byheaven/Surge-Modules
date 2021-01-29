@@ -51,7 +51,7 @@ if (!$tool.isResponse) {
         const IMDbrating = IMDb.msg.rating;
         const tomatoes = IMDb.msg.tomatoes;
         const country = IMDb.msg.country;
-        const message = `${country}\n${IMDbrating}\n : "\n"}`;
+        const message = `${country}\n${IMDbrating}\n`;
         return message;
     }
     let msg = "";
