@@ -1,7 +1,3 @@
-/*
-READMEï¼šhttps://github.com/yichahucha/surge/tree/master
- */
-
 const $tool = new Tool()
 const consoleLog = false;
 const imdbApikeyCacheKey = "ImdbApikeyCacheKey";
