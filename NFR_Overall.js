@@ -209,8 +209,6 @@ function IMDbApikeys() {
 
 function countryEmoji(name) {
     const emojiMap = {
-        function countryEmoji(name) {
-     const emojiMap = {
          "Chequered": "🏁",
          "Triangular": "🚩",
          "Crossed": "🎌",
