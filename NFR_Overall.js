@@ -54,7 +54,7 @@ if (!$tool.isResponse) {
             const country = IMDb.msg.country;
             const awards = IMDb.msg.awards;
             const doubanRating = Douban.rating;
-            const message = `${awards.length > 0 ? awards + "\n": ""}${country}\n${IMDbrating}\n${doubanRating}${tomatoes.length > 0 ? "\n" + tomatoes + "\n" : "\n"}`;
+            const message = `${awards.length > 0 ? awards + "\n": ""}${IMDbrating}\n${doubanRating}${tomatoes.length > 0 ? "\n" + tomatoes + "\n" : "\n"}`;
             return message;
         }
         let msg = "";
@@ -153,7 +153,7 @@ function updateIMDbApikey() {
 }
 
 function get_IMDb_message(data) {
-    let rating_message = "IMDb:  ★ N/A";
+    let rating_message = "IMDb: ★ N/A";
     let tomatoes_message = "";
     let country_message = "";
     let ratings = data.Ratings;
@@ -172,7 +172,7 @@ function get_IMDb_message(data) {
                     const source = ratings[1]["Source"];
                     if (source == "Rotten Tomatoes") {
                         const tomatoes = ratings[1]["Value"];
-                        tomatoes_message = "Tomatoes:  🍅 " + tomatoes;
+                        tomatoes_message = "Tomatoes: " + tomatoes;
                     }
                 }
             }
