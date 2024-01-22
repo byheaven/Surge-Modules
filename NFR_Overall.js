@@ -1,4 +1,4 @@
-const $tool = new Tool();
+const $tool = new Tool()
 const consoleLog = false;
 const imdbApikeyCacheKey = "ImdbApikeyCacheKey";
 const netflixTitleCacheKey = "NetflixTitleCacheKey";
@@ -10,7 +10,7 @@ if (!$tool.isResponse) {
     const videoID = videos[1];
     const map = getTitleMap();
     const title = map[videoID];
-    const isEnglish = url.match(/languages=en/);
+    const isEnglish = url.match(/languages=en/) ? true : false;
 
     if (!title && !isEnglish) {
         const currentSummary = urlDecode.match(/\["videos","(\d+)","current","summary"\]/);
@@ -22,43 +22,61 @@ if (!$tool.isResponse) {
     url += "&path=" + encodeURIComponent(`[${videos[0]},"details"]`);
     $done({ url });
 } else {
-    const IMDbApikeys = IMDbApikeys();
-    const IMDbApikey = $tool.read(imdbApikeyCacheKey) || updateIMDbApikey();
-    const obj = JSON.parse($response.body);
-
+    var IMDbApikeys = IMDbApikeys();
+    var IMDbApikey = $tool.read(imdbApikeyCacheKey);
+    if (!IMDbApikey) updateIMDbApikey();
+    let obj = JSON.parse($response.body);
+    
     if (consoleLog) console.log("Netflix Original Body:\n" + $response.body);
-
-    if (typeof obj.paths[0][1] === "string") {
+    
+    if (typeof obj.paths[0][1] == "string") {
         const videoID = obj.paths[0][1];
         const video = obj.value.videos[videoID];
         const map = getTitleMap();
-        let title = map[videoID] || (map[videoID] = video.summary.title);
-
-        const { year, type, summary } = video.details || {};
-
-        const requestRatings = async () => {
-            try {
-                const IMDb = await requestIMDbRating(title, year, type);
-                const Douban = await requestDoubanRating(IMDb.id);
-                const message = `${IMDb.msg.awards.length > 0 ? IMDb.msg.awards.join("\n") + "\n\n" : ""}${IMDb.msg.rating.join("\t|\t")}${Douban.rating}`;
-                return message;
-            } catch (error) {
-                return error + "\n";
+        let title = map[videoID];
+        if (!title) {
+            title = video.summary.title;
+            setTitleMap(videoID, title, map);
+        }
+        let year = null;
+        let type = video.summary.type;
+        if (type == "show") {
+            type = "series";
+        }
+        if (video.details) {
+            if (type == "movie") {
+                year = video.details.releaseYear;
             }
-        };
-
-        let msg = await requestRatings();
-        summary.supplementalMessage = `${msg}${summary && summary.supplementalMessage ? "\n" + summary.supplementalMessage : ""}`;
-        const msgObj = { tagline: summary.supplementalMessage, classification: "REGULAR" };
-
-        if (summary["supplementalMessages"]) {
-            summary["supplementalMessages"].push(msgObj);
-        } else {
-            summary["supplementalMessages"] = [msgObj];
+            delete video.details;
+        }
+        
+        const requestRatings = async () => {
+            const IMDb = await requestIMDbRating(title, year, type);
+            const Douban = await requestDoubanRating(IMDb.id);
+            const IMDbrating = IMDb.msg.rating;
+            const tomatoes = IMDb.msg.tomatoes;
+            const awards = IMDb.msg.awards;
+            const doubanRating = Douban.rating;
+            const message = `${awards.length > 0 ? awards + "\n" + "\n": ""}${IMDbrating.length > 0 ? IMDbrating: ""}${doubanRating.length > 0 ? "\t" + "|" + "\t" + doubanRating: ""}`;
+            return message;
         }
 
-        if (consoleLog) console.log("Netflix Modified Body:\n" + JSON.stringify(obj));
-        $done({ body: JSON.stringify(obj) });
+        let msg = "";
+        requestRatings()
+            .then(message => msg = message)
+            .catch(error => msg = error + "\n")
+            .finally(() => {
+                let summary = obj.value.videos[videoID].summary;
+                summary["supplementalMessage"] = `${msg}${summary && summary.supplementalMessage ? "\n" + summary.supplementalMessage : ""}`;
+                msg_obj = {"tagline":summary.supplementalMessage, "classification":"REGULAR"}
+                if (summary["supplementalMessages"]) {
+                    summary["supplementalMessages"].push(msg_obj)
+                }else {
+                    summary["supplementalMessages"] = [msg_obj]
+                }
+                if (consoleLog) console.log("Netflix Modified Body:\n" + JSON.stringify(obj));
+                $done({ body: JSON.stringify(obj) });
+            });
     } else {
         $done({});
     }
