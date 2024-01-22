@@ -57,7 +57,7 @@ if (!$tool.isResponse) {
             const tomatoes = IMDb.msg.tomatoes;
             const awards = IMDb.msg.awards;
             const doubanRating = Douban.rating;
-            const message = `${awards.length > 0 ? awards + "\n" + "\n": ""}${IMDbrating.length > 0 ? IMDbrating + "\t" + "|" + "\t": ""}${doubanRating.length > 0 ? doubanRating: ""}`;
+            const message = `${awards.length > 0 ? awards + "\n" + "\n": ""}${IMDbrating.length > 0 ? IMDbrating: ""}${doubanRating.length > 0 ? "\t" + "|" + "\t" + doubanRating: ""}`;
             return message;
         }
         let msg = "";
@@ -162,7 +162,7 @@ function get_IMDb_message(data) {
     let ratings = data.Ratings;
     let awards_message = "";
     if (data.Awards && data.Awards != "N/A") {
-        awards_message = data.Awards;
+        awards_message = "🏆" + data.Awards;
     }
     if (ratings.length > 0) {
         const imdb_source = ratings[0]["Source"];
@@ -187,10 +187,14 @@ function get_IMDb_message(data) {
 function get_douban_rating_message(data) {
     const s = data.replace(/\n| |&#\d{2}/g, '')
         .match(/\[(\u7535\u5f71|\u7535\u89c6\u5267)\].+?subject-cast\">.+?<\/span>/g);
-    
     const average = s ? s[0].split(/">(\d\.\d)</)[1] || '' : '';
 
-    return `[Douban] ★${average ? average + '/10' : ''}`;
+    if (!average) {
+        return '';
+    }
+
+    const rating_message = `[Douban] ★${average}/10`;
+    return rating_message;
 }
 
 function errorTip() {
