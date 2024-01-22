@@ -153,7 +153,7 @@ function updateIMDbApikey() {
 }
 
 function get_IMDb_message(data) {
-    let rating_message = "IMDb: ★ N/A";
+    let rating_message = "IMDb:  ★ N/A";
     let tomatoes_message = "";
     let country_message = "";
     let ratings = data.Ratings;
