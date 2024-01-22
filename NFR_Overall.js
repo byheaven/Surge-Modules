@@ -156,9 +156,9 @@ function updateIMDbApikey() {
     $tool.write(IMDbApikey, imdbApikeyCacheKey);
 }
 
-const AWARDS_PREFIX = "🏆 ";
-
 function get_IMDb_message(data) {
+    const AWARDS_PREFIX = "🏆 ";
+    
     const ratings = data.Ratings || [];
     const imdbSource = ratings[0]?.Source;
 
