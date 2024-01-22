@@ -54,10 +54,14 @@ if (!$tool.isResponse) {
             const IMDb = await requestIMDbRating(title, year, type);
             const Douban = await requestDoubanRating(IMDb.id);
             const IMDbrating = IMDb.msg.rating;
-            const tomatoes = IMDb.msg.tomatoes;
             const awards = IMDb.msg.awards;
             const doubanRating = Douban.rating;
-            const message = `${awards.length > 0 ? awards + "\n" : ""}${IMDbrating.length > 0 ? IMDbrating : ""}${doubanRating.length > 0 ? "\t" + "|" + "\t" + doubanRating : ""}`;
+            const imdbUnderline = (IMDbrating.length > 0) ? "_".repeat(14) : "";
+            const doubanUnderline = (doubanRating.length > 0) ? "_".repeat(16) : "";
+            const imdbUpperline = (IMDbrating.length > 0) ? "‾".repeat(14) : "";
+            const doubanUpperline = (doubanRating.length > 0) ? "‾".repeat(16) : "";
+            const spaceDecoration = (IMDbrating.length > 0 && doubanRating.length > 0) ? " ".repeat(11) : "";
+            const message = `${awards.length > 0 ? awards + "\n" : ""}${imdbUnderline}${spaceDecoration}${doubanUnderline}\n${IMDbrating.length > 0 ? IMDbrating + "\t\t" : ""}${doubanRating.length > 0 ? doubanRating : ""}\n${imdbUpperline}${spaceDecoration}${doubanUpperline}`;
             return message;
         }
 
@@ -170,19 +174,15 @@ function get_IMDb_message(data) {
         if (imdb_source == "Internet Movie Database") {
             const imdb_votes = data.imdbVotes;
             const imdb_rating = ratings[0]["Value"];
-            rating_message = "[IMDb] ★" + imdb_rating;
+            rating_message = "IMDb ★" + imdb_rating;
             if (data.Type == "movie") {
                 if (ratings.length > 1) {
                     const source = ratings[1]["Source"];
-                    if (source == "Rotten Tomatoes") {
-                        const tomatoes = ratings[1]["Value"];
-                        tomatoes_message = "[RT] ★" + tomatoes;
-                    }
                 }
             }
         }
     }
-    return { rating: rating_message, tomatoes: tomatoes_message, awards: awards_message }
+    return { rating: rating_message, awards: awards_message }
 }
 
 function get_douban_rating_message(data) {
@@ -194,7 +194,7 @@ function get_douban_rating_message(data) {
         return '';
     }
 
-    const rating_message = `[Douban] ★${average}/10`;
+    const rating_message = `Douban ★${average}/10`;
     return rating_message;
 }
 
