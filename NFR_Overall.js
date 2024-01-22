@@ -157,7 +157,6 @@ function updateIMDbApikey() {
 }
 
 function get_IMDb_message(data) {
-    const AWARDS_PREFIX = "🏆 ";
     
     const ratings = data.Ratings || [];
     const imdbSource = ratings[0]?.Source;
@@ -176,7 +175,7 @@ function get_IMDb_message(data) {
         tomatoes_message = rtIndex !== -1 ? `[RT] ★${ratings[rtIndex].Value}` : "";
     }
 
-    const awards_message = data.Awards ? AWARDS_PREFIX + data.Awards : "";
+    awards_message = data.Awards ? "🏆" + data.Awards : "";
 
     return { rating: rating_message, tomatoes: tomatoes_message, awards: awards_message };
 }
