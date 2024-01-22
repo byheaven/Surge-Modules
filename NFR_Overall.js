@@ -159,30 +159,30 @@ function updateIMDbApikey() {
 function get_IMDb_message(data) {
     let rating_message = "";
     let tomatoes_message = "";
+    let country_message = "";
     let ratings = data.Ratings;
     let awards_message = "";
-
-    awards_message = data.Awards ? "🏆" + “ ” + data.Awards : "";
-
+    if (data.Awards && data.Awards != "N/A") {
+        awards_message = "🏆" + " " + data.Awards;
+    }
     if (ratings.length > 0) {
         const imdb_source = ratings[0]["Source"];
-
         if (imdb_source == "Internet Movie Database") {
             const imdb_votes = data.imdbVotes;
             const imdb_rating = ratings[0]["Value"];
             rating_message = "[IMDb] ★" + imdb_rating;
-
-            if (data.Type == "movie" && ratings.length > 1) {
-                const source = ratings[1]["Source"];
-                if (source == "Rotten Tomatoes") {
-                    const tomatoes = ratings[1]["Value"];
-                    tomatoes_message = "[RT] ★" + tomatoes;
+            if (data.Type == "movie") {
+                if (ratings.length > 1) {
+                    const source = ratings[1]["Source"];
+                    if (source == "Rotten Tomatoes") {
+                        const tomatoes = ratings[1]["Value"];
+                        tomatoes_message = "[RT] ★" + tomatoes;
+                    }
                 }
             }
         }
     }
-
-    return { rating: rating_message, tomatoes: tomatoes_message, awards: awards_message };
+    return { rating: rating_message, tomatoes: tomatoes_message, awards: awards_message }
 }
 
 function get_douban_rating_message(data) {
