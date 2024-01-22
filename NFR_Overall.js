@@ -162,14 +162,14 @@ function get_IMDb_message(data) {
     let ratings = data.Ratings;
     let awards_message = "";
     if (data.Awards && data.Awards != "N/A") {
-        awards_message = "🏆 " + data.Awards;
+        awards_message = data.Awards;
     }
     if (ratings.length > 0) {
         const imdb_source = ratings[0]["Source"];
         if (imdb_source == "Internet Movie Database") {
             const imdb_votes = data.imdbVotes;
             const imdb_rating = ratings[0]["Value"];
-            rating_message = "[IMDb] ★ " + imdb_rating;
+            rating_message = "[IMDb] ★" + imdb_rating;
             if (data.Type == "movie") {
                 if (ratings.length > 1) {
                     const source = ratings[1]["Source"];
@@ -189,7 +189,7 @@ function get_douban_rating_message(data) {
     .match(/\[(\u7535\u5f71|\u7535\u89c6\u5267)\].+?subject-cast\">.+?<\/span>/g);
     const average = s ? s[0].split(/">(\d\.\d)</)[1] || '' : '';
     const numRaters = s ? s[0].split(/(\d+)\u4eba\u8bc4\u4ef7/)[1] || '' : '';
-    const rating_message = `[Douban] ★ ${average ? average + "/10" : ""}`;
+    const rating_message = `[Douban] ★${average ? average + "/10" : ""}`;
     return rating_message;
 }
 
