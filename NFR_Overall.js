@@ -163,7 +163,7 @@ function get_IMDb_message(data) {
     let ratings = data.Ratings;
     let awards_message = "";
     if (data.Awards && data.Awards != "N/A") {
-        awards_message = "🏆" + data.Awards;
+        awards_message = "🏆" + " " + data.Awards;
     }
     if (ratings.length > 0) {
         const imdb_source = ratings[0]["Source"];
