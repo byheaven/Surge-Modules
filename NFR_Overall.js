@@ -169,14 +169,16 @@ function get_IMDb_message(data) {
     const imdbRating = ratings[0]?.Value;
     const rating_message = imdbRating ? `[IMDb] ★${imdbRating}` : "";
 
+    let tomatoes_message = "";
+
     if (data.Type === "movie" && ratings.length > 1) {
         const rtIndex = ratings.findIndex(rating => rating.Source === "Rotten Tomatoes");
-        const tomatoes_message = rtIndex !== -1 ? `[RT] ★${ratings[rtIndex].Value}` : "";
+        tomatoes_message = rtIndex !== -1 ? `[RT] ★${ratings[rtIndex].Value}` : "";
     }
 
     const awards_message = data.Awards ? AWARDS_PREFIX + data.Awards : "";
 
-    return { rating: rating_message, tomatoes: tomatoes_message || "", awards: awards_message };
+    return { rating: rating_message, tomatoes: tomatoes_message, awards: awards_message };
 }
 
 function get_douban_rating_message(data) {
