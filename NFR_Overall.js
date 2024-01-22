@@ -58,7 +58,7 @@ if (!$tool.isResponse) {
             const country = IMDb.msg.country;
             const awards = IMDb.msg.awards;
             const doubanRating = Douban.rating;
-            const message = `${awards.length > 0 ? awards + "\n": ""}${IMDbrating}\n${doubanRating}`;
+            const message = `${awards.length > 0 ? awards + "\n": ""}${IMDbrating.length > 0 ? IMDbrating + "\n": ""}${doubanRating.length > 0 ? doubanRating: ""}`;
             return message;
         }
         let msg = "";
