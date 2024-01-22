@@ -57,7 +57,7 @@ if (!$tool.isResponse) {
             const tomatoes = IMDb.msg.tomatoes;
             const awards = IMDb.msg.awards;
             const doubanRating = Douban.rating;
-            const message = `${awards.length > 0 ? awards + "\n" + "——".repeat(awards.length).padEnd(awards.length * 2) + "\n" : ""}${IMDbrating.length > 0 ? IMDbrating : ""}${doubanRating.length > 0 ? " ".repeat(awards.length).padEnd(awards.length * " ".length) + "|" + " ".repeat(awards.length).padEnd(awards.length * " ".length) + doubanRating : ""}`;
+            const message = `${awards.length > 0 ? awards + "\n" + "—".repeat(awards.length).padEnd(awards.length * 2) + "\n" : ""}${IMDbrating.length > 0 ? IMDbrating : ""}${doubanRating.length > 0 ? "\t" + "|" + "\t" + doubanRating : ""}`;
             return message;
         }
 
