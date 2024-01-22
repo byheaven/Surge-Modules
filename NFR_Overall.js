@@ -1,3 +1,7 @@
+/*
+README：https://github.com/yichahucha/surge/tree/master
+ */
+
 const $tool = new Tool()
 const consoleLog = false;
 const imdbApikeyCacheKey = "ImdbApikeyCacheKey";
@@ -50,9 +54,11 @@ if (!$tool.isResponse) {
             const IMDb = await requestIMDbRating(title, year, type);
             const Douban = await requestDoubanRating(IMDb.id);
             const IMDbrating = IMDb.msg.rating;
+            const tomatoes = IMDb.msg.tomatoes;
+            const country = IMDb.msg.country;
             const awards = IMDb.msg.awards;
             const doubanRating = Douban.rating;
-            const message = `${awards.length > 0 ? awards + "\n": ""}${IMDbrating}\n${doubanRating}}`;
+            const message = `${awards.length > 0 ? awards + "\n": ""}${IMDbrating}\n${doubanRating}`;
             return message;
         }
         let msg = "";
@@ -151,8 +157,9 @@ function updateIMDbApikey() {
 }
 
 function get_IMDb_message(data) {
-    let rating_message = "IMDb: ★ N/A";
+    let rating_message = "";
     let tomatoes_message = "";
+    let country_message = "";
     let ratings = data.Ratings;
     let awards_message = "";
     if (data.Awards && data.Awards != "N/A") {
@@ -163,18 +170,20 @@ function get_IMDb_message(data) {
         if (imdb_source == "Internet Movie Database") {
             const imdb_votes = data.imdbVotes;
             const imdb_rating = ratings[0]["Value"];
-            rating_message = "IMDb: ★ " + imdb_rating + "   " + imdb_votes;
+            rating_message = "IMDb: ★ " + imdb_rating;
             if (data.Type == "movie") {
                 if (ratings.length > 1) {
                     const source = ratings[1]["Source"];
                     if (source == "Rotten Tomatoes") {
                         const tomatoes = ratings[1]["Value"];
-                        tomatoes_message = "Tomatoes: " + tomatoes;
+                        tomatoes_message = "Tomatoes: ★" + tomatoes;
                     }
                 }
             }
         }
     }
+    country_message = get_country_message(data.Country);
+    return { rating: rating_message, tomatoes: tomatoes_message, country: country_message, awards: awards_message }
 }
 
 function get_douban_rating_message(data) {
@@ -182,12 +191,22 @@ function get_douban_rating_message(data) {
     .match(/\[(\u7535\u5f71|\u7535\u89c6\u5267)\].+?subject-cast\">.+?<\/span>/g);
     const average = s ? s[0].split(/">(\d\.\d)</)[1] || '' : '';
     const numRaters = s ? s[0].split(/(\d+)\u4eba\u8bc4\u4ef7/)[1] || '' : '';
-    const rating_message = `Douban:  ★ ${average ? average + "/10" : "N/A"}   ${!numRaters ? "" : parseFloat(numRaters).toLocaleString()}`;
+    const rating_message = `Douban: ★ ${average ? average + "/10" : ""}   ${!numRaters ? "" : parseFloat(numRaters).toLocaleString()}`;
     return rating_message;
 }
 
+function get_country_message(data) {
+    const country = data;
+    const countrys = country.split(", ");
+    let emoji_country = "";
+    countrys.forEach(item => {
+        emoji_country += countryEmoji(item) + " " + item + ", ";
+    });
+    return emoji_country.slice(0, -2);
+}
+
 function errorTip() {
-    return { noData: "★ N/A", error: "❌ N/A" }
+    return { noData: "★ N/A", error: "✖ N/A" }
 }
 
 function IMDbApikeys() {
@@ -204,6 +223,285 @@ function IMDbApikeys() {
         "d7904fa3", "aeaf88b9",
         "4e89234e",];
     return apikeys;
+}
+
+function countryEmoji(name) {
+    const emojiMap = {
+        "Chequered": "🏁",
+        "Triangular": "🚩",
+        "Crossed": "🎌",
+        "Black": "🏴",
+        "White": "🏳",
+        "Rainbow": "🏳️‍🌈",
+        "Pirate": "🏴‍☠️",
+        "Ascension Island": "🇦🇨",
+        "Andorra": "🇦🇩",
+        "United Arab Emirates": "🇦🇪",
+        "Afghanistan": "🇦🇫",
+        "Antigua & Barbuda": "🇦🇬",
+        "Anguilla": "🇦🇮",
+        "Albania": "🇦🇱",
+        "Armenia": "🇦🇲",
+        "Angola": "🇦🇴",
+        "Antarctica": "🇦🇶",
+        "Argentina": "🇦🇷",
+        "American Samoa": "🇦🇸",
+        "Austria": "🇦🇹",
+        "Australia": "🇦🇺",
+        "Aruba": "🇦🇼",
+        "Åland Islands": "🇦🇽",
+        "Azerbaijan": "🇦🇿",
+        "Bosnia & Herzegovina": "🇧🇦",
+        "Barbados": "🇧🇧",
+        "Bangladesh": "🇧🇩",
+        "Belgium": "🇧🇪",
+        "Burkina Faso": "🇧🇫",
+        "Bulgaria": "🇧🇬",
+        "Bahrain": "🇧🇭",
+        "Burundi": "🇧🇮",
+        "Benin": "🇧🇯",
+        "St. Barthélemy": "🇧🇱",
+        "Bermuda": "🇧🇲",
+        "Brunei": "🇧🇳",
+        "Bolivia": "🇧🇴",
+        "Caribbean Netherlands": "🇧🇶",
+        "Brazil": "🇧🇷",
+        "Bahamas": "🇧🇸",
+        "Bhutan": "🇧🇹",
+        "Bouvet Island": "🇧🇻",
+        "Botswana": "🇧🇼",
+        "Belarus": "🇧🇾",
+        "Belize": "🇧🇿",
+        "Canada": "🇨🇦",
+        "Cocos (Keeling) Islands": "🇨🇨",
+        "Congo - Kinshasa": "🇨🇩",
+        "Congo": "🇨🇩",
+        "Central African Republic": "🇨🇫",
+        "Congo - Brazzaville": "🇨🇬",
+        "Switzerland": "🇨🇭",
+        "Côte d’Ivoire": "🇨🇮",
+        "Cook Islands": "🇨🇰",
+        "Chile": "🇨🇱",
+        "Cameroon": "🇨🇲",
+        "China": "🇨🇳",
+        "Colombia": "🇨🇴",
+        "Clipperton Island": "🇨🇵",
+        "Costa Rica": "🇨🇷",
+        "Cuba": "🇨🇺",
+        "Cape Verde": "🇨🇻",
+        "Curaçao": "🇨🇼",
+        "Christmas Island": "🇨🇽",
+        "Cyprus": "🇨🇾",
+        "Czechia": "🇨🇿",
+        "Czech Republic": "🇨🇿",
+        "Germany": "🇩🇪",
+        "Diego Garcia": "🇩🇬",
+        "Djibouti": "🇩🇯",
+        "Denmark": "🇩🇰",
+        "Dominica": "🇩🇲",
+        "Dominican Republic": "🇩🇴",
+        "Algeria": "🇩🇿",
+        "Ceuta & Melilla": "🇪🇦",
+        "Ecuador": "🇪🇨",
+        "Estonia": "🇪🇪",
+        "Egypt": "🇪🇬",
+        "Western Sahara": "🇪🇭",
+        "Eritrea": "🇪🇷",
+        "Spain": "🇪🇸",
+        "Ethiopia": "🇪🇹",
+        "European Union": "🇪🇺",
+        "Finland": "🇫🇮",
+        "Fiji": "🇫🇯",
+        "Falkland Islands": "🇫🇰",
+        "Micronesia": "🇫🇲",
+        "Faroe Islands": "🇫🇴",
+        "France": "🇫🇷",
+        "Gabon": "🇬🇦",
+        "United Kingdom": "🇬🇧",
+        "UK": "🇬🇧",
+        "Grenada": "🇬🇩",
+        "Georgia": "🇬🇪",
+        "French Guiana": "🇬🇫",
+        "Guernsey": "🇬🇬",
+        "Ghana": "🇬🇭",
+        "Gibraltar": "🇬🇮",
+        "Greenland": "🇬🇱",
+        "Gambia": "🇬🇲",
+        "Guinea": "🇬🇳",
+        "Guadeloupe": "🇬🇵",
+        "Equatorial Guinea": "🇬🇶",
+        "Greece": "🇬🇷",
+        "South Georgia & South Sandwich Is lands": "🇬🇸",
+        "Guatemala": "🇬🇹",
+        "Guam": "🇬🇺",
+        "Guinea-Bissau": "🇬🇼",
+        "Guyana": "🇬🇾",
+        "Hong Kong SAR China": "🇭🇰",
+        "Hong Kong": "🇭🇰",
+        "Heard & McDonald Islands": "🇭🇲",
+        "Honduras": "🇭🇳",
+        "Croatia": "🇭🇷",
+        "Haiti": "🇭🇹",
+        "Hungary": "🇭🇺",
+        "Canary Islands": "🇮🇨",
+        "Indonesia": "🇮🇩",
+        "Ireland": "🇮🇪",
+        "Israel": "🇮🇱",
+        "Isle of Man": "🇮🇲",
+        "India": "🇮🇳",
+        "British Indian Ocean Territory": "🇮🇴",
+        "Iraq": "🇮🇶",
+        "Iran": "🇮🇷",
+        "Iceland": "🇮🇸",
+        "Italy": "🇮🇹",
+        "Jersey": "🇯🇪",
+        "Jamaica": "🇯🇲",
+        "Jordan": "🇯🇴",
+        "Japan": "🇯🇵",
+        "Kenya": "🇰🇪",
+        "Kyrgyzstan": "🇰🇬",
+        "Cambodia": "🇰🇭",
+        "Kiribati": "🇰🇮",
+        "Comoros": "🇰🇲",
+        "St. Kitts & Nevis": "🇰🇳",
+        "North Korea": "🇰🇵",
+        "South Korea": "🇰🇷",
+        "Kuwait": "🇰🇼",
+        "Cayman Islands": "🇰🇾",
+        "Kazakhstan": "🇰🇿",
+        "Laos": "🇱🇦",
+        "Lebanon": "🇱🇧",
+        "St. Lucia": "🇱🇨",
+        "Liechtenstein": "🇱🇮",
+        "Sri Lanka": "🇱🇰",
+        "Liberia": "🇱🇷",
+        "Lesotho": "🇱🇸",
+        "Lithuania": "🇱🇹",
+        "Luxembourg": "🇱🇺",
+        "Latvia": "🇱🇻",
+        "Libya": "🇱🇾",
+        "Morocco": "🇲🇦",
+        "Monaco": "🇲🇨",
+        "Moldova": "🇲🇩",
+        "Montenegro": "🇲🇪",
+        "St. Martin": "🇲🇫",
+        "Madagascar": "🇲🇬",
+        "Marshall Islands": "🇲🇭",
+        "North Macedonia": "🇲🇰",
+        "Mali": "🇲🇱",
+        "Myanmar (Burma)": "🇲🇲",
+        "Mongolia": "🇲🇳",
+        "Macau Sar China": "🇲🇴",
+        "Northern Mariana Islands": "🇲🇵",
+        "Martinique": "🇲🇶",
+        "Mauritania": "🇲🇷",
+        "Montserrat": "🇲🇸",
+        "Malta": "🇲🇹",
+        "Mauritius": "🇲🇺",
+        "Maldives": "🇲🇻",
+        "Malawi": "🇲🇼",
+        "Mexico": "🇲🇽",
+        "Malaysia": "🇲🇾",
+        "Mozambique": "🇲🇿",
+        "Namibia": "🇳🇦",
+        "New Caledonia": "🇳🇨",
+        "Niger": "🇳🇪",
+        "Norfolk Island": "🇳🇫",
+        "Nigeria": "🇳🇬",
+        "Nicaragua": "🇳🇮",
+        "Netherlands": "🇳🇱",
+        "Norway": "🇳🇴",
+        "Nepal": "🇳🇵",
+        "Nauru": "🇳🇷",
+        "Niue": "🇳🇺",
+        "New Zealand": "🇳🇿",
+        "Oman": "🇴🇲",
+        "Panama": "🇵🇦",
+        "Peru": "🇵🇪",
+        "French Polynesia": "🇵🇫",
+        "Papua New Guinea": "🇵🇬",
+        "Philippines": "🇵🇭",
+        "Pakistan": "🇵🇰",
+        "Poland": "🇵🇱",
+        "St. Pierre & Miquelon": "🇵🇲",
+        "Pitcairn Islands": "🇵🇳",
+        "Puerto Rico": "🇵🇷",
+        "Palestinian Territories": "🇵🇸",
+        "Portugal": "🇵🇹",
+        "Palau": "🇵🇼",
+        "Paraguay": "🇵🇾",
+        "Qatar": "🇶🇦",
+        "Réunion": "🇷🇪",
+        "Romania": "🇷🇴",
+        "Serbia": "🇷🇸",
+        "Russia": "🇷🇺",
+        "Rwanda": "🇷🇼",
+        "Saudi Arabia": "🇸🇦",
+        "Solomon Islands": "🇸🇧",
+        "Seychelles": "🇸🇨",
+        "Sudan": "🇸🇩",
+        "Sweden": "🇸🇪",
+        "Singapore": "🇸🇬",
+        "St. Helena": "🇸🇭",
+        "Slovenia": "🇸🇮",
+        "Svalbard & Jan Mayen": "🇸🇯",
+        "Slovakia": "🇸🇰",
+        "Sierra Leone": "🇸🇱",
+        "San Marino": "🇸🇲",
+        "Senegal": "🇸🇳",
+        "Somalia": "🇸🇴",
+        "Suriname": "🇸🇷",
+        "South Sudan": "🇸🇸",
+        "São Tomé & Príncipe": "🇸🇹",
+        "El Salvador": "🇸🇻",
+        "Sint Maarten": "🇸🇽",
+        "Syria": "🇸🇾",
+        "Swaziland": "🇸🇿",
+        "Tristan Da Cunha": "🇹🇦",
+        "Turks & Caicos Islands": "🇹🇨",
+        "Chad": "🇹🇩",
+        "French Southern Territories": "🇹🇫",
+        "Togo": "🇹🇬",
+        "Thailand": "🇹🇭",
+        "Tajikistan": "🇹🇯",
+        "Tokelau": "🇹🇰",
+        "Timor-Leste": "🇹🇱",
+        "Turkmenistan": "🇹🇲",
+        "Tunisia": "🇹🇳",
+        "Tonga": "🇹🇴",
+        "Turkey": "🇹🇷",
+        "Trinidad & Tobago": "🇹🇹",
+        "Tuvalu": "🇹🇻",
+        "Taiwan": "🇨🇳",
+        "Tanzania": "🇹🇿",
+        "Ukraine": "🇺🇦",
+        "Uganda": "🇺🇬",
+        "U.S. Outlying Islands": "🇺🇲",
+        "United Nations": "🇺🇳",
+        "United States": "🇺🇸",
+        "USA": "🇺🇸",
+        "Uruguay": "🇺🇾",
+        "Uzbekistan": "🇺🇿",
+        "Vatican City": "🇻🇦",
+        "St. Vincent & Grenadines": "🇻🇨",
+        "Venezuela": "🇻🇪",
+        "British Virgin Islands": "🇻🇬",
+        "U.S. Virgin Islands": "🇻🇮",
+        "Vietnam": "🇻🇳",
+        "Vanuatu": "🇻🇺",
+        "Wallis & Futuna": "🇼🇫",
+        "Samoa": "🇼🇸",
+        "Kosovo": "🇽🇰",
+        "Yemen": "🇾🇪",
+        "Mayotte": "🇾🇹",
+        "South Africa": "🇿🇦",
+        "Zambia": "🇿🇲",
+        "Zimbabwe": "🇿🇼",
+        "England": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+        "Scotland": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
+        "Wales": "🏴󠁧󠁢󠁷󠁬󠁳󠁿",
+    }
+    return emojiMap[name] ? emojiMap[name] : emojiMap["Chequered"];
 }
 
 function Tool() {
