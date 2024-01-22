@@ -55,7 +55,6 @@ if (!$tool.isResponse) {
             const Douban = await requestDoubanRating(IMDb.id);
             const IMDbrating = IMDb.msg.rating;
             const tomatoes = IMDb.msg.tomatoes;
-            const country = IMDb.msg.country;
             const awards = IMDb.msg.awards;
             const doubanRating = Douban.rating;
             const message = `${awards.length > 0 ? awards + "\n": ""}${IMDbrating.length > 0 ? IMDbrating + "\n": ""}${doubanRating.length > 0 ? doubanRating: ""}`;
@@ -170,13 +169,13 @@ function get_IMDb_message(data) {
         if (imdb_source == "Internet Movie Database") {
             const imdb_votes = data.imdbVotes;
             const imdb_rating = ratings[0]["Value"];
-            rating_message = "IMDb: ★ " + imdb_rating;
+            rating_message = "[IMDb] ★ " + imdb_rating;
             if (data.Type == "movie") {
                 if (ratings.length > 1) {
                     const source = ratings[1]["Source"];
                     if (source == "Rotten Tomatoes") {
                         const tomatoes = ratings[1]["Value"];
-                        tomatoes_message = "Tomatoes: ★" + tomatoes;
+                        tomatoes_message = "[RT] ★" + tomatoes;
                     }
                 }
             }
@@ -190,7 +189,7 @@ function get_douban_rating_message(data) {
     .match(/\[(\u7535\u5f71|\u7535\u89c6\u5267)\].+?subject-cast\">.+?<\/span>/g);
     const average = s ? s[0].split(/">(\d\.\d)</)[1] || '' : '';
     const numRaters = s ? s[0].split(/(\d+)\u4eba\u8bc4\u4ef7/)[1] || '' : '';
-    const rating_message = `Douban: ★ ${average ? average + "/10" : ""}`;
+    const rating_message = `[Douban] ★ ${average ? average + "/10" : ""}`;
     return rating_message;
 }
 
