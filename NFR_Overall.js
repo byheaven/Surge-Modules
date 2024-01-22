@@ -156,33 +156,27 @@ function updateIMDbApikey() {
     $tool.write(IMDbApikey, imdbApikeyCacheKey);
 }
 
+const AWARDS_PREFIX = "🏆 ";
+
 function get_IMDb_message(data) {
-    let rating_message = "";
-    let tomatoes_message = "";
-    let country_message = "";
-    let ratings = data.Ratings;
-    let awards_message = "";
-    if (data.Awards && data.Awards != "N/A") {
-        awards_message = "🏆" + " " + data.Awards;
+    const ratings = data.Ratings || [];
+    const imdbSource = ratings[0]?.Source;
+
+    if (!imdbSource || imdbSource !== "Internet Movie Database") {
+        return { rating: "", tomatoes: "", awards: "" };
     }
-    if (ratings.length > 0) {
-        const imdb_source = ratings[0]["Source"];
-        if (imdb_source == "Internet Movie Database") {
-            const imdb_votes = data.imdbVotes;
-            const imdb_rating = ratings[0]["Value"];
-            rating_message = "[IMDb] ★" + imdb_rating;
-            if (data.Type == "movie") {
-                if (ratings.length > 1) {
-                    const source = ratings[1]["Source"];
-                    if (source == "Rotten Tomatoes") {
-                        const tomatoes = ratings[1]["Value"];
-                        tomatoes_message = "[RT] ★" + tomatoes;
-                    }
-                }
-            }
-        }
+
+    const imdbRating = ratings[0]?.Value;
+    const rating_message = imdbRating ? `[IMDb] ★${imdbRating}` : "";
+
+    if (data.Type === "movie" && ratings.length > 1) {
+        const rtIndex = ratings.findIndex(rating => rating.Source === "Rotten Tomatoes");
+        const tomatoes_message = rtIndex !== -1 ? `[RT] ★${ratings[rtIndex].Value}` : "";
     }
-    return { rating: rating_message, tomatoes: tomatoes_message, awards: awards_message }
+
+    const awards_message = data.Awards ? AWARDS_PREFIX + data.Awards : "";
+
+    return { rating: rating_message, tomatoes: tomatoes_message || "", awards: awards_message };
 }
 
 function get_douban_rating_message(data) {
