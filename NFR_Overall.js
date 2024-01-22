@@ -57,7 +57,7 @@ if (!$tool.isResponse) {
             const tomatoes = IMDb.msg.tomatoes;
             const awards = IMDb.msg.awards;
             const doubanRating = Douban.rating;
-            const message = `${awards.length > 0 ? awards + "\n": ""}${IMDbrating.length > 0 ? IMDbrating + "\n": ""}${doubanRating.length > 0 ? doubanRating: ""}`;
+            const message = `${awards.length > 0 ? awards + "\n" + "\n": ""}${IMDbrating.length > 0 ? IMDbrating + "\t" + "|" + "\t": ""}${doubanRating.length > 0 ? doubanRating: ""}`;
             return message;
         }
         let msg = "";
