@@ -206,7 +206,7 @@ function get_country_message(data) {
 }
 
 function errorTip() {
-    return { noData: "★ N/A", error: "✖ N/A" }
+    return { noData: "", error: "" }
 }
 
 function IMDbApikeys() {
