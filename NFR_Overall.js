@@ -174,8 +174,8 @@ function get_IMDb_message(data) {
         const rtIndex = ratings.findIndex(rating => rating.Source === "Rotten Tomatoes");
         tomatoes_message = rtIndex !== -1 ? `[RT] ★${ratings[rtIndex].Value}` : "";
     }
-
-    awards_message = data.Awards ? "🏆" + data.Awards : "";
+    let award_message = "";
+    awards_message = data.Awards ? "🏆" + " " + data.Awards : "";
 
     return { rating: rating_message, tomatoes: tomatoes_message, awards: awards_message };
 }
