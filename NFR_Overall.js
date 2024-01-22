@@ -52,8 +52,9 @@ if (!$tool.isResponse) {
             const IMDbrating = IMDb.msg.rating;
             const tomatoes = IMDb.msg.tomatoes;
             const country = IMDb.msg.country;
+            const awards = IMDb.msg.awards;
             const doubanRating = Douban.rating;
-            const message = `${country}\n${IMDbrating}\n${doubanRating}${tomatoes.length > 0 ? "\n" + tomatoes + "\n" : "\n"}`;
+            const message = `${awards.length > 0 ? awards + "\n": ""}${country}\n${IMDbrating}\n${doubanRating}${tomatoes.length > 0 ? "\n" + tomatoes + "\n" : "\n"}`;
             return message;
         }
         let msg = "";
@@ -63,6 +64,12 @@ if (!$tool.isResponse) {
             .finally(() => {
                 let summary = obj.value.videos[videoID].summary;
                 summary["supplementalMessage"] = `${msg}${summary && summary.supplementalMessage ? "\n" + summary.supplementalMessage : ""}`;
+                msg_obj = {"tagline":summary.supplementalMessage, "classification":"REGULAR"}
+                if (summary["supplementalMessages"]) {
+                    summary["supplementalMessages"].push(msg_obj)
+                }else {
+                    summary["supplementalMessages"] = [msg_obj]
+                }
                 if (consoleLog) console.log("Netflix Modified Body:\n" + JSON.stringify(obj));
                 $done({ body: JSON.stringify(obj) });
             });
@@ -146,29 +153,33 @@ function updateIMDbApikey() {
 }
 
 function get_IMDb_message(data) {
-    let rating_message = "IMDb: ★ n/a";
+    let rating_message = "IMDb:  ⭐️ N/A";
     let tomatoes_message = "";
     let country_message = "";
     let ratings = data.Ratings;
+    let awards_message = "";
+    if (data.Awards && data.Awards != "N/A") {
+        awards_message = "🏆 " + data.Awards;
+    }
     if (ratings.length > 0) {
         const imdb_source = ratings[0]["Source"];
         if (imdb_source == "Internet Movie Database") {
             const imdb_votes = data.imdbVotes;
             const imdb_rating = ratings[0]["Value"];
-            rating_message = "IMDb: ★ " + imdb_rating + "   " + "[" + imdb_votes + "]";
+            rating_message = "IMDb:  ⭐️ " + imdb_rating + "   " + imdb_votes;
             if (data.Type == "movie") {
                 if (ratings.length > 1) {
                     const source = ratings[1]["Source"];
                     if (source == "Rotten Tomatoes") {
                         const tomatoes = ratings[1]["Value"];
-                        tomatoes_message = "Tomatoes: " + tomatoes;
+                        tomatoes_message = "Tomatoes:  🍅 " + tomatoes;
                     }
                 }
             }
         }
     }
     country_message = get_country_message(data.Country);
-    return { rating: rating_message, tomatoes: tomatoes_message, country: country_message }
+    return { rating: rating_message, tomatoes: tomatoes_message, country: country_message, awards: awards_message }
 }
 
 function get_douban_rating_message(data) {
@@ -176,7 +187,7 @@ function get_douban_rating_message(data) {
     .match(/\[(\u7535\u5f71|\u7535\u89c6\u5267)\].+?subject-cast\">.+?<\/span>/g);
     const average = s ? s[0].split(/">(\d\.\d)</)[1] || '' : '';
     const numRaters = s ? s[0].split(/(\d+)\u4eba\u8bc4\u4ef7/)[1] || '' : '';
-    const rating_message = `Douban: ★ ${average ? average + "/10" : "N/A"}   [${!numRaters ? "" : parseFloat(numRaters).toLocaleString()}]`;
+    const rating_message = `Douban:  ⭐️ ${average ? average + "/10" : "N/A"}   ${!numRaters ? "" : parseFloat(numRaters).toLocaleString()}`;
     return rating_message;
 }
 
@@ -191,7 +202,7 @@ function get_country_message(data) {
 }
 
 function errorTip() {
-    return { noData: "★ n/a", error: "⊗ n/a" }
+    return { noData: "⭐️ N/A", error: "❌ N/A" }
 }
 
 function IMDbApikeys() {
@@ -457,7 +468,7 @@ function countryEmoji(name) {
         "Turkey": "🇹🇷",
         "Trinidad & Tobago": "🇹🇹",
         "Tuvalu": "🇹🇻",
-        "Taiwan": "🇹🇼",
+        "Taiwan": "🇨🇳",
         "Tanzania": "🇹🇿",
         "Ukraine": "🇺🇦",
         "Uganda": "🇺🇬",
