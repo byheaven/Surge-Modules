@@ -159,21 +159,22 @@ function updateIMDbApikey() {
 function get_IMDb_message(data) {
     let rating_message = "";
     let tomatoes_message = "";
-    let awards_message = data.Awards ? "🏆 " + data.Awards : "";
+    let ratings = data.Ratings;
+    let awards_message = "";
 
-    const ratings = data.Ratings;
+    awards_message = data.Awards ? "🏆" + “ ” + data.Awards : "";
 
     if (ratings.length > 0) {
         const imdb_source = ratings[0]["Source"];
 
-        if (imdb_source === "Internet Movie Database") {
+        if (imdb_source == "Internet Movie Database") {
             const imdb_votes = data.imdbVotes;
             const imdb_rating = ratings[0]["Value"];
             rating_message = "[IMDb] ★" + imdb_rating;
 
-            if (data.Type === "movie" && ratings.length > 1) {
+            if (data.Type == "movie" && ratings.length > 1) {
                 const source = ratings[1]["Source"];
-                if (source === "Rotten Tomatoes") {
+                if (source == "Rotten Tomatoes") {
                     const tomatoes = ratings[1]["Value"];
                     tomatoes_message = "[RT] ★" + tomatoes;
                 }
